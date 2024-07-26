@@ -1,4 +1,4 @@
-// ファイルが選択されたら実行
+// 入力された画像を表示
 document.getElementById("imageInput").addEventListener('change', function(e){
 
   let file_reader = new FileReader();
@@ -12,3 +12,20 @@ document.getElementById("imageInput").addEventListener('change', function(e){
     imgElement.src = e.target.result;
   });
 });
+
+
+// 位置情報を取得
+navigator.geolocation.getCurrentPosition(success, error);
+
+function success(pos) {
+  const crd = pos.coords;
+
+  console.log("Your current position is:");
+  console.log(`Latitude : ${crd.latitude}`);
+  console.log(`Longitude: ${crd.longitude}`);
+  console.log(`More or less ${crd.accuracy} meters.`);
+}
+
+function error(err) {
+  console.warn(`ERROR(${err.code}): ${err.message}`);
+}
