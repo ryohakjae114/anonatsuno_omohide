@@ -19,13 +19,35 @@ navigator.geolocation.getCurrentPosition(success, error);
 
 function success(pos) {
   const crd = pos.coords;
+  const lat = crd.latitude;
+  const lon = crd.longitude;
 
   console.log("Your current position is:");
-  console.log(`Latitude : ${crd.latitude}`);
-  console.log(`Longitude: ${crd.longitude}`);
+  console.log(`Latitude : ${lat}`);
+  console.log(`Longitude: ${lon}`);
   console.log(`More or less ${crd.accuracy} meters.`);
+
+  getCurrentTemperature(lat, lon)
 }
 
 function error(err) {
   console.warn(`ERROR(${err.code}): ${err.message}`);
+}
+
+
+async function getCurrentTemperature(lat, lon) {
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m&past_days=1&forecast_days=1`
+  console.log(url);
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`レスポンスステータス: ${response.status}`);
+    }
+
+    const json = await response.json();
+    const currentTemperature = json.current.temperature_2m
+    console.log(currentTemperature);
+  } catch (error) {
+    console.error(error.message);
+  }
 }
