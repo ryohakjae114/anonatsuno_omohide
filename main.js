@@ -27,7 +27,7 @@ function success(pos) {
   console.log(`Longitude: ${lon}`);
   console.log(`More or less ${crd.accuracy} meters.`);
 
-  getCity(lat, lon)
+  getCurrentTemperature(lat, lon)
 }
 
 function error(err) {
@@ -35,7 +35,7 @@ function error(err) {
 }
 
 
-async function getCity(lat, lon) {
+async function getCurrentTemperature(lat, lon) {
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m&past_days=1&forecast_days=1`
   console.log(url);
   try {
