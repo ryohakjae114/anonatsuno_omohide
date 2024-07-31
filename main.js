@@ -1,3 +1,5 @@
+const imgField = document.getElementById('imgField');
+
 // 入力された画像を表示
 document.getElementById("imageInput").addEventListener('change', function(e){
 
@@ -44,39 +46,73 @@ async function getCurrentTemperature(lat, lon) {
     const json = await response.json();
     const currentTemperature = json.current.temperature_2m
     console.log(currentTemperature);
-    makeGhostImage(currentTemperature);
+    const opacity = makeGhostImage(currentTemperature);
+    changeOpacity(opacity);
   } catch (error) {
     console.error(error.message);
   }
 }
 
-function makeGhostImage(temperature) {  
-  if (temperature >= 32) {
+function makeGhostImage(temperature) {
+  temperature = 28;
+  let opacity = null;
+  if (temperature >= 26) {
+    opacity = 0.4;
     overlapHakjaeImg('bottom-0', 'end-0');
   }
-  if (temperature >= 34) {
+  if (temperature >= 28) {
+    opacity = 0.5;
     overlapHakjaeImg('top-0', 'start-0');
   }
-  if (temperature >= 36) {
+  if (temperature >= 30) {
+    opacity = 0.6;
     overlapHakjaeImg('top-0', 'end-0');
+  }
+  if (temperature >= 32) {
+    opacity = 0.7;
     overlapHakjaeImg('bottom-0', 'start-0');
   }
-  if (temperature >= 38) {
+  if (temperature >= 34) {
+    opacity = 0.8;
     overlapHakjaeImg('top-0', 'start-50');
-    overlapHakjaeImg('top-50', 'end-0');
     overlapHakjaeImg('bottom-0', 'start-50');
+  }
+  if (temperature >= 36) {
+    opacity = 0.9;
+    overlapHakjaeImg('top-50', 'end-0');
     overlapHakjaeImg('top-50', 'start-0');
+  }
+  if (temperature >= 38) {
+    opacity = 1;
     overlapHakjaeImg('top-50', 'start-50');
   }
+  return opacity;
 }
 
-function overlapHakjaeImg(xDirection, yDirection) {
-  const imgField = document.getElementById('imgField');
-
+function overlapHakjaeImg(xDirection, yDirection, opacity) {
   let ghostImgElement = document.createElement('img');
   ghostImgElement.src = 'images/hakjae.png';
   ghostImgElement.style.height = '100px';
   ghostImgElement.style.width = '100px';
-  ghostImgElement.classList.add('position-absolute', xDirection, yDirection);
+  ghostImgElement.style.opacity = opacity;
+  ghostImgElement.classList.add('position-absolute', xDirection, yDirection, 'ghostImage');
   imgField.appendChild(ghostImgElement);
+  overlapBloodSplatter(xDirection, yDirection, opacity);
+}
+
+function overlapBloodSplatter(xDirection, yDirection, opacity) {
+  let ghostImgElement = document.createElement('img');
+  ghostImgElement.src = 'images/bloodSplatter.png';
+  ghostImgElement.style.height = '100px';
+  ghostImgElement.style.width = '100px';
+  ghostImgElement.style.opacity = opacity;
+  ghostImgElement.classList.add('position-absolute', xDirection, yDirection, 'ghostImage');
+  imgField.appendChild(ghostImgElement);
+}
+
+function changeOpacity(opacity) {
+  let ghostImages = document.querySelectorAll(".ghostImage");
+  ghostImages.forEach((ghostImage) => {
+    ghostImage.style.opacity = opacity;
+  });
 }
