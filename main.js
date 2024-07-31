@@ -10,12 +10,10 @@ document.getElementById("imageInput").addEventListener('change', function(e){
     // img要素をページに挿入
     let imgElement = document.getElementById('img');
     imgElement.src = e.target.result;
+    // 位置情報を取得
+    navigator.geolocation.getCurrentPosition(success, error);
   });
 });
-
-
-// 位置情報を取得
-navigator.geolocation.getCurrentPosition(success, error);
 
 function success(pos) {
   const crd = pos.coords;
@@ -26,8 +24,7 @@ function success(pos) {
   console.log(`Latitude : ${lat}`);
   console.log(`Longitude: ${lon}`);
   console.log(`More or less ${crd.accuracy} meters.`);
-
-  getCurrentTemperature(lat, lon)
+  getCurrentTemperature(lat, lon);
 }
 
 function error(err) {
@@ -47,7 +44,39 @@ async function getCurrentTemperature(lat, lon) {
     const json = await response.json();
     const currentTemperature = json.current.temperature_2m
     console.log(currentTemperature);
+    makeGhostImage(currentTemperature);
   } catch (error) {
     console.error(error.message);
   }
+}
+
+function makeGhostImage(temperature) {  
+  if (temperature >= 32) {
+    overlapHakjaeImg('bottom-0', 'end-0');
+  }
+  if (temperature >= 34) {
+    overlapHakjaeImg('top-0', 'start-0');
+  }
+  if (temperature >= 36) {
+    overlapHakjaeImg('top-0', 'end-0');
+    overlapHakjaeImg('bottom-0', 'start-0');
+  }
+  if (temperature >= 38) {
+    overlapHakjaeImg('top-0', 'start-50');
+    overlapHakjaeImg('top-50', 'end-0');
+    overlapHakjaeImg('bottom-0', 'start-50');
+    overlapHakjaeImg('top-50', 'start-0');
+    overlapHakjaeImg('top-50', 'start-50');
+  }
+}
+
+function overlapHakjaeImg(xDirection, yDirection) {
+  const imgField = document.getElementById('imgField');
+
+  let ghostImgElement = document.createElement('img');
+  ghostImgElement.src = 'images/hakjae.png';
+  ghostImgElement.style.height = '100px';
+  ghostImgElement.style.width = '100px';
+  ghostImgElement.classList.add('position-absolute', xDirection, yDirection);
+  imgField.appendChild(ghostImgElement);
 }
