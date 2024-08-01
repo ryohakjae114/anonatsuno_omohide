@@ -82,5 +82,6 @@ function overlapHakjaeImg(size) {
   ghostImgElement.style.height = `${size}px`;
   ghostImgElement.style.filter =  'grayscale(80%)';
   ghostImgElement.classList.add('position-absolute', 'bottom-0', 'end-0', 'opacity-75', 'ghostImage');
+  imgField.classList.remove('d-none');
   imgField.appendChild(ghostImgElement);
 }

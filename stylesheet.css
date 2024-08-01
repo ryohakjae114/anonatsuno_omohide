@@ -1,0 +1,14 @@
+@font-face {
+  font-family: 'fuwafuwa';
+  src: url('fonts/hannotate-sc-regular.otf');
+}
+body {
+  font-family: 'fuwafuwa';
+}
+h1 {
+  font-size: 60px;
+  color: #007aff;
+}
+.inputWrapper {
+  margin-top: -400px;
+}
