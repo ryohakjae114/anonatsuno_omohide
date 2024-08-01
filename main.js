@@ -1,4 +1,5 @@
 const imgField = document.getElementById('imgField');
+const inputWrapper = document.getElementById('inputWrapper');
 
 // 入力された画像を表示
 document.getElementById("imageInput").addEventListener('change', function(e){
@@ -12,6 +13,8 @@ document.getElementById("imageInput").addEventListener('change', function(e){
     // img要素をページに挿入
     let imgElement = document.getElementById('img');
     imgElement.src = e.target.result;
+
+    inputWrapper.remove();
     // 位置情報を取得
     navigator.geolocation.getCurrentPosition(success, error);
   });
@@ -26,8 +29,11 @@ function success(pos) {
   console.log(`Latitude : ${lat}`);
   console.log(`Longitude: ${lon}`);
   console.log(`More or less ${crd.accuracy} meters.`);
-  const currentTemperature = getCurrentTemperature(lat, lon);
-  makeGhostImage(currentTemperature);
+  getCurrentTemperature(lat, lon).then((currentTemperature) => {
+    // 上の血痕を上から徐々に上から垂らしていく
+    makeGhostImage(currentTemperature);
+    changeDisplayToGhost();
+  })
 }
 
 function error(err) {
@@ -43,31 +49,32 @@ async function getCurrentTemperature(lat, lon) {
     if (!response.ok) {
       throw new Error(`レスポンスステータス: ${response.status}`);
     }
-
     const json = await response.json();
-    const currentTemperature = json.current.temperature_2m
-    console.log(currentTemperature);
+    const currentTemperature = json.current.temperature_2m;
+    console.log(`getCurrentTemperatureより${currentTemperature}`);
+    return currentTemperature;
   } catch (error) {
     console.error(error.message);
   }
 }
 
 function makeGhostImage(temperature) {
+  console.log(`makeGhostImageより${temperature}`)
   switch (true) {
     case temperature >= 38:
       overlapHakjaeImg(400);
       break;
     case temperature >= 36:
-      overlapHakjaeImg(300);
+      overlapHakjaeImg(350);
       break;
     case temperature >= 34:
-      overlapHakjaeImg(200);
+      overlapHakjaeImg(300);
       break;
     case temperature >= 32:
-      overlapHakjaeImg(100);
+      overlapHakjaeImg(250);
       break;
     case temperature >= 30:
-      overlapHakjaeImg(70);
+      overlapHakjaeImg(200);
       break;
     default:
       overlapHakjaeImg(50);
@@ -78,9 +85,26 @@ function makeGhostImage(temperature) {
 function overlapHakjaeImg(size) {
   let ghostImgElement = document.createElement('img');
   ghostImgElement.src = 'images/hakjae.png';
-  ghostImgElement.style.height = `${size}px`;
-  ghostImgElement.style.height = `${size}px`;
+  ghostImgElement.style.width = `${size}px`;
   ghostImgElement.style.filter =  'grayscale(80%)';
-  ghostImgElement.classList.add('position-absolute', 'bottom-0', 'end-0', 'opacity-75', 'ghostImage');
+  ghostImgElement.classList.add('position-absolute', 'bottom-0', 'end-0', 'ghostImage');
+  imgField.classList.remove('d-none');
   imgField.appendChild(ghostImgElement);
+}
+
+function changeDisplayToGhost() {
+  const body = document.body;
+  body.classList.add('changeBg');
+  body.style.backgroundColor = 'black';
+
+  const title = document.getElementById('title');
+  title.textContent = "夏の思い出の1枚が。。。";
+  title.style.color = 'red';
+
+  const summerFrame = document.getElementById('summerFrame');
+  summerFrame.style.filter = 'grayscale(100%)';
+
+  const bloodSplatter = document.getElementById('bloodSplatter');
+  bloodSplatter.classList.add('position-absolute', 'top-0', 'start-0', 'moveBloodSplatter');
+  bloodSplatter.classList.remove('d-none');
 }

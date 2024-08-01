@@ -1,0 +1,42 @@
+@font-face {
+  font-family: 'fuwafuwa';
+  src: url('fonts/hannotate-sc-regular.otf');
+}
+body {
+  font-family: 'fuwafuwa';
+}
+#title {
+  font-size: 60px;
+  color: #007aff;
+}
+#inputWrapper {
+  margin-top: -500px;
+}
+
+.changeBg {
+  animation: backgroundChange 5s forwards;
+}
+
+.moveBloodSplatter {
+  animation: moveDown 5s forwards;
+}
+
+.ghostImage {
+  animation: opacityChange 5s forwards;
+}
+
+@keyframes backgroundChange {
+  from { background-color: white; }
+  to { background-color: black; }
+}
+
+
+@keyframes moveDown {
+  from { transform: translateY(-212px); }
+  to { transform: translateY(0px); }
+}
+
+@keyframes opacityChange {
+  from { opacity: 0%; }
+  to { opacity: 75%; }
+}
