@@ -53,7 +53,6 @@ async function getCurrentTemperature(lat, lon) {
 }
 
 function makeGhostImage(temperature) {
-  temperature = 30;
   switch (true) {
     case temperature >= 38:
       overlapHakjaeImg(400);
