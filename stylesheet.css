@@ -9,6 +9,6 @@ h1 {
   font-size: 60px;
   color: #007aff;
 }
-.inputWrapper {
-  margin-top: -400px;
+#inputWrapper {
+  margin-top: -500px;
 }

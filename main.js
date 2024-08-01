@@ -1,4 +1,5 @@
 const imgField = document.getElementById('imgField');
+const inputWrapper = document.getElementById('inputWrapper');
 
 // 入力された画像を表示
 document.getElementById("imageInput").addEventListener('change', function(e){
@@ -12,6 +13,8 @@ document.getElementById("imageInput").addEventListener('change', function(e){
     // img要素をページに挿入
     let imgElement = document.getElementById('img');
     imgElement.src = e.target.result;
+
+    inputWrapper.remove();
     // 位置情報を取得
     navigator.geolocation.getCurrentPosition(success, error);
   });
