@@ -31,6 +31,7 @@ function success(pos) {
   console.log(`More or less ${crd.accuracy} meters.`);
   const currentTemperature = getCurrentTemperature(lat, lon);
   makeGhostImage(currentTemperature);
+  changeDisplayToGhost();
 }
 
 function error(err) {
@@ -46,31 +47,32 @@ async function getCurrentTemperature(lat, lon) {
     if (!response.ok) {
       throw new Error(`レスポンスステータス: ${response.status}`);
     }
-
     const json = await response.json();
-    const currentTemperature = json.current.temperature_2m
-    console.log(currentTemperature);
+    const currentTemperature = json.current.temperature_2m;
+    debugger;
+    return currentTemperature;
   } catch (error) {
     console.error(error.message);
   }
 }
 
 function makeGhostImage(temperature) {
+  // temperature = 40
   switch (true) {
     case temperature >= 38:
       overlapHakjaeImg(400);
       break;
     case temperature >= 36:
-      overlapHakjaeImg(300);
+      overlapHakjaeImg(350);
       break;
     case temperature >= 34:
-      overlapHakjaeImg(200);
+      overlapHakjaeImg(300);
       break;
     case temperature >= 32:
-      overlapHakjaeImg(100);
+      overlapHakjaeImg(250);
       break;
     case temperature >= 30:
-      overlapHakjaeImg(70);
+      overlapHakjaeImg(200);
       break;
     default:
       overlapHakjaeImg(50);
@@ -81,10 +83,25 @@ function makeGhostImage(temperature) {
 function overlapHakjaeImg(size) {
   let ghostImgElement = document.createElement('img');
   ghostImgElement.src = 'images/hakjae.png';
-  ghostImgElement.style.height = `${size}px`;
-  ghostImgElement.style.height = `${size}px`;
+  ghostImgElement.style.width = `${size}px`;
   ghostImgElement.style.filter =  'grayscale(80%)';
   ghostImgElement.classList.add('position-absolute', 'bottom-0', 'end-0', 'opacity-75', 'ghostImage');
   imgField.classList.remove('d-none');
   imgField.appendChild(ghostImgElement);
+}
+
+function changeDisplayToGhost() {
+  const body = document.body;
+  body.style.backgroundColor = 'black';
+
+  const title = document.getElementById('title');
+  title.textContent = "夏の思い出の1枚が。。。";
+  title.style.color = 'red';
+
+  const summerFrame = document.getElementById('summerFrame');
+  summerFrame.style.filter = 'grayscale(100%)';
+
+  const bloodSplatter = document.getElementById('bloodSplatter');
+  bloodSplatter.classList.add('position-absolute', 'top-0', 'start-0');
+  bloodSplatter.classList.remove('d-none');
 }
