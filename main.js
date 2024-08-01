@@ -29,9 +29,11 @@ function success(pos) {
   console.log(`Latitude : ${lat}`);
   console.log(`Longitude: ${lon}`);
   console.log(`More or less ${crd.accuracy} meters.`);
-  const currentTemperature = getCurrentTemperature(lat, lon);
-  makeGhostImage(currentTemperature);
-  changeDisplayToGhost();
+  getCurrentTemperature(lat, lon).then((currentTemperature) => {
+    // 上の血痕を上から徐々に上から垂らしていく
+    makeGhostImage(currentTemperature);
+    changeDisplayToGhost();
+  })
 }
 
 function error(err) {
@@ -49,7 +51,7 @@ async function getCurrentTemperature(lat, lon) {
     }
     const json = await response.json();
     const currentTemperature = json.current.temperature_2m;
-    debugger;
+    console.log(`getCurrentTemperatureより${currentTemperature}`);
     return currentTemperature;
   } catch (error) {
     console.error(error.message);
@@ -57,7 +59,7 @@ async function getCurrentTemperature(lat, lon) {
 }
 
 function makeGhostImage(temperature) {
-  // temperature = 40
+  console.log(`makeGhostImageより${temperature}`)
   switch (true) {
     case temperature >= 38:
       overlapHakjaeImg(400);
@@ -85,13 +87,14 @@ function overlapHakjaeImg(size) {
   ghostImgElement.src = 'images/hakjae.png';
   ghostImgElement.style.width = `${size}px`;
   ghostImgElement.style.filter =  'grayscale(80%)';
-  ghostImgElement.classList.add('position-absolute', 'bottom-0', 'end-0', 'opacity-75', 'ghostImage');
+  ghostImgElement.classList.add('position-absolute', 'bottom-0', 'end-0', 'ghostImage');
   imgField.classList.remove('d-none');
   imgField.appendChild(ghostImgElement);
 }
 
 function changeDisplayToGhost() {
   const body = document.body;
+  body.classList.add('changeBg');
   body.style.backgroundColor = 'black';
 
   const title = document.getElementById('title');
@@ -102,6 +105,6 @@ function changeDisplayToGhost() {
   summerFrame.style.filter = 'grayscale(100%)';
 
   const bloodSplatter = document.getElementById('bloodSplatter');
-  bloodSplatter.classList.add('position-absolute', 'top-0', 'start-0');
+  bloodSplatter.classList.add('position-absolute', 'top-0', 'start-0', 'moveBloodSplatter');
   bloodSplatter.classList.remove('d-none');
 }
