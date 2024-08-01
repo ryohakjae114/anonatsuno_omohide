@@ -77,7 +77,7 @@ function makeGhostImage(temperature) {
       overlapHakjaeImg(200);
       break;
     default:
-      overlapHakjaeImg(50);
+      overlapHakjaeImg(100);
       break;
   }
 }
