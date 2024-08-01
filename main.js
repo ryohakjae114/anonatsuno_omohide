@@ -1,3 +1,5 @@
+const imgField = document.getElementById('imgField');
+
 // 入力された画像を表示
 document.getElementById("imageInput").addEventListener('change', function(e){
 
@@ -10,12 +12,10 @@ document.getElementById("imageInput").addEventListener('change', function(e){
     // img要素をページに挿入
     let imgElement = document.getElementById('img');
     imgElement.src = e.target.result;
+    // 位置情報を取得
+    navigator.geolocation.getCurrentPosition(success, error);
   });
 });
-
-
-// 位置情報を取得
-navigator.geolocation.getCurrentPosition(success, error);
 
 function success(pos) {
   const crd = pos.coords;
@@ -26,8 +26,8 @@ function success(pos) {
   console.log(`Latitude : ${lat}`);
   console.log(`Longitude: ${lon}`);
   console.log(`More or less ${crd.accuracy} meters.`);
-
-  getCurrentTemperature(lat, lon)
+  const currentTemperature = getCurrentTemperature(lat, lon);
+  makeGhostImage(currentTemperature);
 }
 
 function error(err) {
@@ -50,4 +50,38 @@ async function getCurrentTemperature(lat, lon) {
   } catch (error) {
     console.error(error.message);
   }
+}
+
+function makeGhostImage(temperature) {
+  temperature = 30;
+  switch (true) {
+    case temperature >= 38:
+      overlapHakjaeImg(400);
+      break;
+    case temperature >= 36:
+      overlapHakjaeImg(300);
+      break;
+    case temperature >= 34:
+      overlapHakjaeImg(200);
+      break;
+    case temperature >= 32:
+      overlapHakjaeImg(100);
+      break;
+    case temperature >= 30:
+      overlapHakjaeImg(70);
+      break;
+    default:
+      overlapHakjaeImg(50);
+      break;
+  }
+}
+
+function overlapHakjaeImg(size) {
+  let ghostImgElement = document.createElement('img');
+  ghostImgElement.src = 'images/hakjae.png';
+  ghostImgElement.style.height = `${size}px`;
+  ghostImgElement.style.height = `${size}px`;
+  ghostImgElement.style.filter =  'grayscale(80%)';
+  ghostImgElement.classList.add('position-absolute', 'bottom-0', 'end-0', 'opacity-75', 'ghostImage');
+  imgField.appendChild(ghostImgElement);
 }
